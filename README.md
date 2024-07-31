@@ -28,7 +28,7 @@ Here are all the required API routes for this project grouped into several categ
 |/api/menu-items/{menuItem}  |Manager|PUT, PATCH|Updates single menu item|
 |/api/menu-items/{menuItem}  |Manager|DELETE|Deletes menu item|
 
-**Menu-items endpoints**
+**User group management endpoints**
 
 |**Endpoint**|**Role**|**Method**|**Purpose**|
 |------------|--------|----------|-----------|
