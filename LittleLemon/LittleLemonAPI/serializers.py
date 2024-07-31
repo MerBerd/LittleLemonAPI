@@ -18,6 +18,11 @@ class UserSerializer(serializers.ModelSerializer):
         )
         return user
 
+class MenuItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = '__all__'
+
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 
     def validate(self, attrs):
