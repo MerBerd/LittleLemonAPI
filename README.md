@@ -40,4 +40,10 @@ Here are all the required API routes for this project grouped into several categ
 |/api/groups/delivery-crew/users/{userId}|Manager|DELETE|Removes this user from the manager group and returns 200 – Success if everything is okay. If the user is not found, returns  404 – Not found|
 
 
+**Cart management endpoints**
 
+|**Endpoint**|**Role**|**Method**|**Purpose**|
+|------------|--------|----------|-----------|
+|/api/cart/menu-items  |Customer|GET|Returns current items in the cart for the current user token|
+|/api/cart/menu-items  |Customer|POST|Adds the menu item to the cart. Sets the authenticated user as the user id for these cart items|
+|/api/cart/menu-items  |Customer|DELETE|Deletes all menu items created by the current user token|
