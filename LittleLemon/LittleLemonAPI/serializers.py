@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from .models import *
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -20,7 +21,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 class MenuItemSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
+        model = MenuItem
         fields = '__all__'
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -36,5 +37,27 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 
         return data
         
+class CartGetSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Cart
+        fields = ['menuitem', 'quantity']
+
 
         
+class CartPostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Cart
+        fields = ['menuitem', 'quantity', 'price']
+    
+    def create(self, validated_data):
+        user = self.context['request'].user
+        menuitem = validated_data['menuitem']
+        quantity = validated_data['quantity']
+
+        # Create or update the cart item
+        cart_item, created = Cart.objects.update_or_create(
+            user=user,
+            menuitem=menuitem,
+            defaults={'quantity': quantity, 'unit_price': menuitem.price, 'price': menuitem.price * quantity}
+        )
+        return cart_item

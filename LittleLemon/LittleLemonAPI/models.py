@@ -24,6 +24,10 @@ class Cart(models.Model):
 
     class Meta:
         unique_together = ('menuitem', 'user')
+    
+    def save(self, *args, **kwargs):
+        self.price = self.unit_price * self.quantity
+        super().save(*args, **kwargs)
 
 
 class Order(models.Model):

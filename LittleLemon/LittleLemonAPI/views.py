@@ -223,6 +223,54 @@ class DeliveryCrewDeleteView(APIView):
         except User.DoesNotExist:
             return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
 
+
+class CartView(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, request):
+        user = request.user.username
+        user = get_object_or_404(User, username=user)
+        menu_items = Cart.objects.filter(user=user)
+        serializer = CartGetSerializer(menu_items, many=True)
+        return Response(serializer.data)
+    
+
+    def post(self, request):
+        user = request.user.username
+        user = get_object_or_404(User, username=user)
+        menu_item_id = request.data.get('id')
+        quantity = request.data.get('quantity')
+        menu_item = get_object_or_404(MenuItem, id=menu_item_id)
+
+        data = {
+            'user': user.id,
+            'menuitem': menu_item.id,
+            'quantity': quantity
+        }
+        if menu_item.price:
+            price = menu_item.price
+        
+        if price: data['price'] = price
+
+        serializer = CartPostSerializer(data=data, context={'request': request})
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+    def delete(self, request):
+        user = request.user
+        # Filter and delete all cart items for the user
+        cart_items = Cart.objects.filter(user=user)
+        cart_items.delete()
+
+        return Response({"detail": "All cart items deleted."}, status=status.HTTP_204_NO_CONTENT)
+
+        
+    def post(self, request):
+        pass
+    def delete(self, request):
+        pass
+
     
 
 

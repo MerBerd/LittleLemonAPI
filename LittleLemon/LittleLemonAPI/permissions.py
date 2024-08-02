@@ -9,3 +9,12 @@ class IsManager(BasePermission):
             return request.user.groups.filter(name__in=allowed_groups).exists()
         
         return False
+
+class IsCustomer(BasePermission):
+    def has_permission(self, request, view):
+        allowed_groups = ['Manager', 'Delivery Crew']
+
+        if request.user and request.user.is_authenticated:
+            return not request.user.groups.filter(name__in=allowed_groups).exists()
+        
+        return True
